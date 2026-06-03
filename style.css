@@ -18,6 +18,12 @@
     box-sizing: border-box;
 }
 
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden; /* evita que algo más ancho que la pantalla genere scroll horizontal / zoom out */
+}
+
 body {
     background-color: var(--bg-dark);
     color: var(--text-white);
@@ -277,6 +283,7 @@ body {
 
 .card-info {
     flex: 1;
+    min-width: 0; /* permite que el texto se ajuste y no desborde la card */
     padding-right: 1.5rem;
 }
 
@@ -285,18 +292,24 @@ body {
     font-size: 1.2rem;
     font-weight: 500;
     margin-bottom: 0.4rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .card-desc {
     font-size: 0.85rem;
     color: var(--text-grey);
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .card-price {
     font-weight: 600;
     color: var(--gold-accent);
     font-size: 1.1rem;
-    white-space: nowrap;
+    text-align: right;
+    overflow-wrap: break-word; /* deja partir precios largos en vez de desbordar */
+    max-width: 45%; /* limita el ancho en desktop para que el texto largo baje de renglón */
 }
 
 /* Reservas Section */
@@ -410,9 +423,12 @@ footer p {
     }
     .card-info {
         padding-right: 0;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
     .card-price {
-        align-self: flex-start;
+        align-self: stretch;
+        text-align: left;
+        max-width: 100%;
+        font-size: 1rem;
     }
 }
