@@ -56,7 +56,7 @@ const cartaItems = {
     {n:'Filet de Anchoa de Banco',d:'c/ guarnición',p:'P/1: $39.000 | P/2: $66.500'},
     {n:'Filet de Merluza Negra',d:'c/ guarnición',p:'P/1: $40.000 | P/2: $67.500'},
     {n:'Filet de Abadejo',d:'c/ guarnición',p:'P/1: $40.000 | P/2: $67.500'},
-    {n:'Filet de Chernia',d:'c/ guarnición',p:'P/1: $40.000 | P/2: $67.500'},
+    {n:'Filet de Chernia',d:'c/ guarnición',p:'P/1: $50.000 | P/2: $90.000'},
     {n:'Filet de Lenguado',d:'c/ guarnición',p:'P/1: $35.000 | P/2: $62.500'},
     {n:'Filet de Salmón Blanco',d:'c/ guarnición',p:'P/1: $35.000 | P/2: $62.500'},
     {n:'Filet de Salmón Rosado',d:'c/ guarnición',p:'P/1: $60.000 | P/2: $90.000'},
@@ -64,14 +64,14 @@ const cartaItems = {
     {n:'Ostras',d:'Frescas con lima y sriracha',p:'P/1: $60.000'}
   ],
   'CAZUELAS': [
-    {n:'Cazuela',d:'Individual',p:'$30.000'},
-    {n:'Cazuela',d:'P/ dos personas',p:'$52.500'},
-    {n:'Cazuela Familiar',d:'',p:'$95.000'}
+    {n:'Cazuela',d:'Individual',p:'$40.000'},
+    {n:'Cazuela',d:'P/ dos personas',p:'$65.000'},
+    {n:'Cazuela Familiar',d:'',p:'$105.000'}
   ],
   'PAELLAS': [
-    {n:'Paella',d:'Individual',p:'$30.000'},
-    {n:'Paella',d:'P/ dos personas',p:'$52.500'},
-    {n:'Paella Familiar',d:'',p:'$95.000'}
+    {n:'Paella',d:'Individual',p:'$35.000'},
+    {n:'Paella',d:'P/ dos personas',p:'$60.000'},
+    {n:'Paella Familiar',d:'',p:'$100.000'}
   ],
   'PASTAS': [
     {n:'Spaghetti Italiano Garofalo',d:'',p:'$18.000'},
@@ -103,12 +103,12 @@ const cartaItems = {
     {n:'Vegetales Grillados',d:'',p:'$12.000'}
   ],
   'POSTRES': [
-    {n:'Postre Brie',d:'Zapallo e higos en almíbar, dulce de membrillo y batata, queso brie',p:'$14.000'},
-    {n:'Queso y Dulce',d:'Clásico dulce de batata y membrillo con queso cremoso',p:'$8.000'},
-    {n:'Tiramisú',d:'',p:'Para compartir: $18.000 | Individual: $13.000'},
-    {n:'Mousse de Dulce de Leche',d:'',p:'$15.000'},
-    {n:'Marquis de Chocolate',d:'Con helado de mascarpone y frutos rojos',p:'$15.000'},
-    {n:'Flan',d:'Con dulce de leche y crema',p:'$13.000'}
+    {n:'Postre Brie',d:'Zapallo e higos en almíbar, dulce de membrillo y batata, queso brie',p:'$20.000'},
+    {n:'Queso y Dulce',d:'Clásico dulce de batata y membrillo con queso cremoso',p:'$10.000'},
+    {n:'Tiramisú',d:'',p:'Para compartir: $20.000 | Individual: $15.000'},
+    {n:'Mousse de Dulce de Leche',d:'',p:'$20.000'},
+    {n:'Marquis de Chocolate',d:'Con helado de mascarpone y frutos rojos',p:'$20.000'},
+    {n:'Flan',d:'Con dulce de leche y crema',p:'$15.000'}
   ]
 };
 
@@ -117,24 +117,39 @@ const cartaItems = {
 // ============================================================
 const bebidasItems = {
   'SIN ALCOHOL': [
-    {n:'Agua Mineral',d:'500ml',p:'$4.300'},
-    {n:'Agua con Gas',d:'500ml',p:'$4.300'},
-    {n:'Agua Saborizada',d:'500ml',p:'$4.300'},
-    {n:'Gaseosa Lata Línea Pepsi',d:'',p:'$3.300'}],
+    {n:'Agua Mineral',d:'500ml',p:'$5.000'},
+    {n:'Agua con Gas',d:'500ml',p:'$5.000'},
+    {n:'Agua Saborizada',d:'500ml',p:'$5.000'},
+    {n:'Gaseosa Lata Línea Pepsi',d:'',p:'$5.000'}],
   'CON ALCOHOL': [
-    {n:'Corona',d:'330ml',p:'$6.000'},
-    {n:'Corona',d:'710ml',p:'$10.000'},
-    {n:'Stella Artois',d:'Lata',p:'$6.000'},
-    {n:'Stella Artois',d:'1 litro',p:'$10.000'},
-    {n:'Patagonia',d:'730ml',p:'$10.000'}
+    {n:'Corona',d:'330ml',p:'$8.000'},
+    {n:'Corona',d:'710ml',p:'$15.000'},
+    {n:'Stella Artois',d:'Lata',p:'$8.000'},
+    {n:'Stella Artois',d:'1 litro',p:'$15.000'},
+    {n:'Patagonia',d:'730ml',p:'$15.000'}
   ],
   'COCTELERÍA': [
+    {n:'---',d:'CLÁSICOS',p:'',section:true},
+    {n:'APEROL SPRITZ',d:'',p:'$10.000'},
+    {n:'FERROVIARIO',d:'',p:'$10.000'},
+    {n:'NEGRONI',d:'',p:'$10.000'},
+    {n:'BOULVARDIER',d:'',p:'$12.000'},
+    {n:'CUBA LIBRE',d:'',p:'$10.000'},
+    {n:'FERNET BRANCA',d:'',p:'$10.000'},
+    {n:'CAMPARI ORANGE/TONIC',d:'',p:'$10.000'},
+    {n:'---',d:'VERMUT\'S',p:'',section:true},
+    {n:'CINZANO ROSSO C/SODA',d:'',p:'$8.000'},
+    {n:'CINZANO BIANCO C/SODA',d:'',p:'$8.000'},
+    {n:'LUNFA ROSSO',d:'',p:'$10.000'},
+    {n:'LUNFA ROSADO',d:'',p:'$10.000'},
+    {n:'LUNFA SPRITZ',d:'',p:'$11.000'},
+    {n:'CYNAR POMELO',d:'',p:'$8.000'},
     {n:'---',d:'TÓNICOS',p:'',section:true},
-    {n:'GIN SUR',d:'',p:'$8.000'},
-    {n:'BOMBAY',d:'',p:'$12.000'},
-    {n:'BULLDOG',d:'',p:'$10.000'},
-    {n:'TANQUERAY',d:'',p:'$12.000'},
-    {n:'HENDRICK\'S',d:'',p:'$14.000'},
+    {n:'GIN SUR',d:'',p:'$10.000'},
+    {n:'BOMBAY',d:'',p:'$13.000'},
+    {n:'BULLDOG',d:'',p:'$13.000'},
+    {n:'TANQUERAY',d:'',p:'$13.000'},
+    {n:'HENDRICK\'S',d:'',p:'$15.000'},
     {n:'---',d:'WHISKYS',p:'',section:true},
     {n:'JAMESON',d:'',p:'$10.000'},
     {n:'JIMBEAM',d:'',p:'$11.000'},
@@ -144,11 +159,11 @@ const bebidasItems = {
     {n:'TOMINTOUL 10 AÑOS',d:'',p:'$22.000'},
     {n:'GLENALLACHIE 12 AÑOS',d:'',p:'$35.000'},
     {n:'---',d:'CERVEZAS',p:'',section:true},
-    {n:'CORONA',d:'330 ml',p:'$6.000'},
-    {n:'CORONA',d:'710 ml',p:'$10.000'},
-    {n:'STELLA',d:'Lata',p:'$6.000'},
-    {n:'STELLA',d:'1 litro',p:'$10.000'},
-    {n:'PATAGONIA',d:'730 ml',p:'$10.000'}
+    {n:'CORONA',d:'330 ml',p:'$8.000'},
+    {n:'CORONA',d:'710 ml',p:'$15.000'},
+    {n:'STELLA',d:'Lata',p:'$8.000'},
+    {n:'STELLA',d:'1 litro',p:'$15.000'},
+    {n:'PATAGONIA',d:'730 ml',p:'$15.000'}
   ]
 };
 
