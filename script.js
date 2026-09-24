@@ -3,7 +3,41 @@
 //  Los DATOS del menú (items, precios, textos) están en
 //  el archivo menu-data.js — editá ESE archivo para cambiar
 //  el contenido. Normalmente NO necesitás tocar este archivo.
+//
+//  Las traducciones (inglés, portugués, ruso, chino) están en
+//  translations.js.
 // ============================================================
+
+let currentLang = localStorage.getItem('lang') || 'es';
+
+function t(key) {
+    return (uiText[currentLang] && uiText[currentLang][key] !== undefined)
+        ? uiText[currentLang][key]
+        : uiText.es[key];
+}
+
+function sectionLabel(key) {
+    const table = (uiText[currentLang] && uiText[currentLang].sectionHeadings) || {};
+    return table[key] !== undefined ? table[key] : (uiText.es.sectionHeadings[key] || key);
+}
+
+// Returns the items to render for a carta/bebidas category, overlaying
+// translated n/d by array index when available, falling back to the
+// Spanish source item otherwise (so an incomplete translation never breaks rendering).
+function localizedItems(category, baseItems) {
+    if (currentLang === 'es') return baseItems;
+    const overlay = menuTranslations[currentLang] && menuTranslations[currentLang][category];
+    if (!overlay) return baseItems;
+    return baseItems.map((item, i) => {
+        const tItem = overlay[i];
+        if (!tItem) return item;
+        return {
+            ...item,
+            n: tItem.n !== undefined ? tItem.n : item.n,
+            d: tItem.d !== undefined ? tItem.d : (item.section ? sectionLabel(item.d) : item.d)
+        };
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // Nav elements
@@ -19,6 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const bebidasContent = document.getElementById('bebidas-content');
     const vinosContent = document.getElementById('vinos-content');
     const bodegaSelect = document.getElementById('bodega-select');
+    const bodegaLabel = document.querySelector('.bodega-label');
+    const langDropdown = document.getElementById('lang-dropdown');
+    const langToggle = document.getElementById('lang-dropdown-toggle');
+    const langMenu = document.getElementById('lang-dropdown-menu');
 
     let currentSubs = { carta: 'PROMOS', bebidas: 'SIN ALCOHOL', vinos: 'CATENA ZAPATA' };
 
@@ -30,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sectionName === 'carta' && subName === 'PROMOS') {
             const note = document.createElement('div');
             note.className = 'info-card';
-            note.innerHTML = '<p>*GUARNICIONES A ELECCIÓN: Vegetales grillados - Ensalada - Papas a la plancha o fritas</p>';
+            note.innerHTML = `<p>${t('notePromos')}</p>`;
             container.appendChild(note);
         }
 
@@ -38,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sectionName === 'carta' && subName === 'ENTRADAS') {
             const note = document.createElement('div');
             note.className = 'info-card';
-            note.innerHTML = '<p>CUBIERTOS $2.000</p>';
+            note.innerHTML = `<p>${t('noteEntradas')}</p>`;
             container.appendChild(note);
         }
 
@@ -46,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sectionName === 'carta' && subName === 'PESCA') {
             const note = document.createElement('div');
             note.className = 'info-card';
-            note.innerHTML = '<p>*La selección de la pesca del día está sujeta a disponibilidad</p>';
+            note.innerHTML = `<p>${t('notePesca')}</p>`;
             container.appendChild(note);
         }
 
@@ -57,7 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (item.section) {
                 const heading = document.createElement('div');
                 heading.className = 'category-heading';
-                heading.innerHTML = `<h2>${item.d}</h2><div class="heading-line"></div>`;
+                const headingText = sectionName === 'vinos' ? sectionLabel(item.d) : item.d;
+                heading.innerHTML = `<h2>${headingText}</h2><div class="heading-line"></div>`;
                 itemsGrid.appendChild(heading);
             } else {
                 const card = document.createElement('div');
@@ -76,12 +115,24 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(itemsGrid);
     }
 
+    function renderCarta(cat) {
+        renderItems(localizedItems(cat, cartaItems[cat]), cartaContent, 'carta', cat);
+    }
+
+    function renderBebidas(cat) {
+        renderItems(localizedItems(cat, bebidasItems[cat]), bebidasContent, 'bebidas', cat);
+    }
+
+    function renderVinos(bodega) {
+        renderItems(vinosItems[bodega], vinosContent, 'vinos', bodega);
+    }
+
     // Function to render sub-menus
     function renderSubMenu(container, categories, sectionKey) {
         container.innerHTML = '';
         categories.forEach(cat => {
             const li = document.createElement('li');
-            li.textContent = cat;
+            li.textContent = sectionLabel(cat);
             li.dataset.category = cat;
             if (cat === currentSubs[sectionKey]) {
                 li.classList.add('active');
@@ -93,18 +144,77 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentSubs[sectionKey] = cat;
 
                 if (sectionKey === 'carta') {
-                    renderItems(cartaItems[cat], cartaContent, sectionKey, cat);
+                    renderCarta(cat);
                 } else if (sectionKey === 'bebidas') {
-                    renderItems(bebidasItems[cat], bebidasContent, sectionKey, cat);
+                    renderBebidas(cat);
                 }
             });
             container.appendChild(li);
         });
     }
 
-    // Initialize Sub-menus
-    renderSubMenu(subMenuCarta, cartaSubs, 'carta');
-    renderSubMenu(subMenuBebidas, bebidasSubs, 'bebidas');
+    function renderNav() {
+        const navLabels = { carta: 'navCarta', bebidas: 'navBebidas', vinos: 'navVinos', reservas: 'navReservas' };
+        mainNavItems.forEach(item => {
+            item.textContent = t(navLabels[item.dataset.tab]);
+        });
+    }
+
+    function renderStaticText() {
+        renderNav();
+        if (bodegaLabel) bodegaLabel.textContent = t('bodegaLabel');
+        document.querySelector('.reservas-card h3').textContent = t('reservasHeading');
+        document.querySelector('.reservas-card p').textContent = t('reservasText');
+        document.querySelector('#btn-whatsapp .social-label').textContent = t('whatsappLabel');
+        document.querySelector('#btn-instagram .social-label').textContent = t('instagramLabel');
+        document.querySelector('footer .footer-content p').textContent = t('footerText');
+        if (langToggle) langToggle.setAttribute('aria-label', t('langSelectLabel'));
+    }
+
+    function renderLangDropdown() {
+        if (!langToggle || !langMenu) return;
+
+        const current = languages.find(l => l.code === currentLang) || languages[0];
+        langToggle.innerHTML = `
+            <span class="lang-flag">${current.flag}</span>
+            <span class="lang-current-label">${current.label}</span>
+            <svg class="lang-caret" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+        `;
+
+        langMenu.innerHTML = '';
+        languages.forEach(lang => {
+            const li = document.createElement('li');
+            li.setAttribute('role', 'option');
+            li.dataset.lang = lang.code;
+            if (lang.code === currentLang) li.classList.add('active');
+            li.innerHTML = `<span class="lang-flag">${lang.flag}</span><span>${lang.label}</span>`;
+            li.addEventListener('click', () => {
+                currentLang = lang.code;
+                localStorage.setItem('lang', currentLang);
+                closeLangDropdown();
+                renderAll();
+            });
+            langMenu.appendChild(li);
+        });
+    }
+
+    function closeLangDropdown() {
+        if (!langDropdown) return;
+        langDropdown.classList.remove('open');
+        langToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function renderAll() {
+        renderStaticText();
+        renderLangDropdown();
+        renderSubMenu(subMenuCarta, cartaSubs, 'carta');
+        renderSubMenu(subMenuBebidas, bebidasSubs, 'bebidas');
+        renderCarta(currentSubs.carta);
+        renderBebidas(currentSubs.bebidas);
+        if (vinosBodegas.length > 0) {
+            renderVinos(currentSubs.vinos);
+        }
+    }
 
     // Initialize Vinos select
     if (bodegaSelect) {
@@ -121,16 +231,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         bodegaSelect.addEventListener('change', (e) => {
             currentSubs.vinos = e.target.value;
-            renderItems(vinosItems[currentSubs.vinos], vinosContent, 'vinos', currentSubs.vinos);
+            renderVinos(currentSubs.vinos);
+        });
+    }
+
+    // Language switcher (custom dropdown, so options can carry SVG flags)
+    if (langToggle && langDropdown) {
+        langToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = langDropdown.classList.toggle('open');
+            langToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+        document.addEventListener('click', (e) => {
+            if (!langDropdown.contains(e.target)) closeLangDropdown();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLangDropdown();
         });
     }
 
     // Initial render
-    renderItems(cartaItems[currentSubs.carta], cartaContent, 'carta', currentSubs.carta);
-    renderItems(bebidasItems[currentSubs.bebidas], bebidasContent, 'bebidas', currentSubs.bebidas);
-    if (vinosBodegas.length > 0) {
-        renderItems(vinosItems[currentSubs.vinos], vinosContent, 'vinos', currentSubs.vinos);
-    }
+    renderAll();
 
     // Main Navigation Logic
     mainNavItems.forEach(item => {
